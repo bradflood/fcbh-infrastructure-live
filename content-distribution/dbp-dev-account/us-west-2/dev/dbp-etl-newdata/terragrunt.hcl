@@ -21,11 +21,20 @@ dependency "vpc" {
   }
 }
 
+dependency "rds" {
+  config_path = "../rds"
+  mock_outputs = {
+    endpoint        = ""
+    reader_endpoint = ""
+  }
+}
+
 inputs = {
-  environment = "dev"
+  environment = "newdata"
   vpc_id = dependency.vpc.outputs.vpc_id
   ecs_subnets = dependency.vpc.outputs.public_subnet_ids
   ecs_security_group = dependency.vpc.outputs.vpc_default_security_group_id
-  database_host = "dbp-dev-api-ghopper-cluster.cluster-c43uzts2g90s.us-west-2.rds.amazonaws.com"
-  s3_artifacts_bucket = "dbp-etl-artifacts-dev"
+  database_host = dependency.rds.outputs.endpoint
+  acm_certificate_arn = "arn:aws:acm:us-east-1:078432969830:certificate/6d4e6f6b-85b2-49f6-9064-50b16176e8b5"
+  alias = "etl.dev.dbt.io"
 }
